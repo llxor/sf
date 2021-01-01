@@ -1,5 +1,5 @@
-#import <stdio.h>
 #import <errors.h>
+#import <stdio.h>
 
 void execute(const char *cmd) {
   FILE *proc = popen(cmd, "r");

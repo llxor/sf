@@ -1,6 +1,6 @@
+#import <stdarg.h>
 #import <stdio.h>
 #import <stdlib.h>
-#import <stdarg.h>
 
 const char *RED = "\e[31;1m", *BOLD = "\e[37;1m", *NORMAL = "\e[0m";
 
