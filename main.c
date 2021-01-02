@@ -9,5 +9,5 @@ int main(int argc, char **argv) {
   struct error errors[20] = {};
   int len = parse(cmd, errors);
 
-  startgui(len, errors);
+  init(len, errors);
 }

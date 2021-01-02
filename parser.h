@@ -2,7 +2,7 @@
 #import <utils.h>
 
 struct error {
-  char file[100], msg[1000], context[3000];
+  char file[100], msg[500], context[1000];
   int line, col;
 };
 
