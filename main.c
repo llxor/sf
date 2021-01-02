@@ -6,7 +6,7 @@ int main(int argc, char **argv) {
   char cmd[1000] = {};
   buildcommand(cmd, argc, argv);
 
-  while (1) {
+  while (argc > 1) {
     struct error errors[20] = {};
     int len = parse(cmd, errors);
 
