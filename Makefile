@@ -1,5 +1,4 @@
 CC = clang
-CFLAGS = -O3 -s -I. -Wall -Wextra
-SRC = $(wildcard *.c)
+CFLAGS = -O3 -s -Wall -Wextra
 
-default:; $(CC) $(SRC) -o main $(CFLAGS) 
+default:; $(CC) main.c -o main $(CFLAGS) 
