@@ -42,7 +42,6 @@ void render(int selected, int W, int N, struct error errors[N]) {
 
     if (i == selected) {
       printh(W, buffer);
-      printw("%s\n", e.context);
     } else {
       printw("%s\n", buffer);
     }
@@ -55,9 +54,9 @@ void edit(struct error e) {
   system(cmd);
 }
 
-void init(int N, struct error errors[N]) {
+int init(int N, struct error errors[N]) {
   int width = init_render();
-  int selected = 0;
+  int selected = 0, exitcode = 0;
 
   while (selected != -1) {
     render(selected, width, N, errors);
@@ -76,12 +75,16 @@ void init(int N, struct error errors[N]) {
 
     case '\n':
       edit(errors[selected]);
+      selected = -1;
+      break;
 
     case 'q':
       selected = -1;
+      exitcode = 1;
       break;
     }
   }
 
   endwin();
+  return exitcode;
 }
