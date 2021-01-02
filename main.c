@@ -1,3 +1,4 @@
+#import <gui.h>
 #import <parser.h>
 #import <stdio.h>
 
@@ -8,8 +9,5 @@ int main(int argc, char **argv) {
   struct error errors[20] = {};
   int len = parse(cmd, errors);
 
-  for (int i = 0; i < len; i++) {
-    struct error e = errors[i];
-    printf("%s:%d:%d: %s\n%s", e.file, e.line, e.col, e.msg, e.context);
-  }
+  startgui(len, errors);
 }
