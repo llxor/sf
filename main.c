@@ -9,7 +9,7 @@ int main(int argc, char **argv) {
   int exit = argc < 2;
 
   while (!exit) {
-    struct error errors[20] = {};
+    struct error errors[MAX_ERR] = {};
     int len = parse(cmd, errors);
 
     if (len == 0)
