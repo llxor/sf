@@ -1,6 +1,6 @@
 # sf
 
-USAGE: sf [command]
+**USAGE:** `sf [command]`
 
 sf provides a simple frontend to compilers.
 
