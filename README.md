@@ -1,7 +1,5 @@
 # sf
 
-**USAGE:** `sf [command]`
-
 sf provides a simple frontend to compilers.
 
 **Keybindings:**
