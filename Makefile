@@ -1,5 +1,5 @@
 CC = clang
-CFLAGS = -O3 -s -Wall -Wextra -I. -lncurses
+CFLAGS = -O3 -s -Wall -Wextra -Isrc -lncurses
 
-default:; $(CC) main.c -o main $(CFLAGS) 
-format:; clang-format -i *.c *.h
+default:; $(CC) src/main.c -o main $(CFLAGS)
+format:; clang-format -i src/*.c src/*.h
