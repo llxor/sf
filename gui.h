@@ -18,11 +18,22 @@ void printh(int width, const char *msg) {
   attroff(A_STANDOUT);
 }
 
-void render(int selected, WINDOW *win, int N, struct error errors[N]) {
+int init_render() {
+  WINDOW *win = initscr();
+
+  keypad(stdscr, TRUE);
+  curs_set(0);
+  noecho();
+
   int width, height;
   getmaxyx(win, height, width);
+
+  return width;
+}
+
+void render(int selected, int W, int N, struct error errors[N]) {
   clear();
-  
+
   for (int i = 0; i < N; i++) {
     struct error e = errors[i];
 
@@ -30,7 +41,7 @@ void render(int selected, WINDOW *win, int N, struct error errors[N]) {
     sprintf(buffer, "%s:%d:%d: %s", e.file, e.line, e.col, e.msg);
 
     if (i == selected) {
-      printh(width, buffer);
+      printh(W, buffer);
       printw("%s\n", e.context);
     } else {
       printw("%s\n", buffer);
@@ -38,22 +49,23 @@ void render(int selected, WINDOW *win, int N, struct error errors[N]) {
   }
 }
 
+void edit(struct error e) {
+  char cmd[1000] = {};
+  sprintf(cmd, "vim %s '+normal %dG%d|'", e.file, e.line, e.col);
+  system(cmd);
+}
+
 void init(int N, struct error errors[N]) {
-  WINDOW *win = initscr();
-
-  keypad(stdscr, TRUE);
-  curs_set(0);
-  noecho();
-
+  int width = init_render();
   int selected = 0;
 
   while (selected != -1) {
-    render(selected, win, N, errors);
+    render(selected, width, N, errors);
     int key = getch();
 
     switch (key) {
     case KEY_UP:
-      if(selected != 0)
+      if (selected != 0)
         selected--;
       break;
 
@@ -61,6 +73,9 @@ void init(int N, struct error errors[N]) {
       if (selected != N - 1)
         selected++;
       break;
+
+    case '\n':
+      edit(errors[selected]);
 
     case 'q':
       selected = -1;

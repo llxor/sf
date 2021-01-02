@@ -6,8 +6,13 @@ int main(int argc, char **argv) {
   char cmd[1000] = {};
   buildcommand(cmd, argc, argv);
 
-  struct error errors[20] = {};
-  int len = parse(cmd, errors);
+  while (1) {
+    struct error errors[20] = {};
+    int len = parse(cmd, errors);
 
-  init(len, errors);
+    if (len == 0)
+      break;
+
+    init(len, errors);
+  }
 }

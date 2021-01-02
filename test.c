@@ -1,7 +1,6 @@
 #import <stdio.h>
 
-Int main() {
-  printF("hello %d!\n", "world");
-  error
+int main() {
+  printf("hello %s!\n", "world");
   return 0;
 }
