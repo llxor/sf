@@ -1,3 +1,4 @@
+#import <help.h>
 #import <gui.h>
 #import <parser.h>
 #import <stdio.h>
@@ -8,6 +9,11 @@ int main(int argc, char **argv) {
 
   int exit = argc < 2;
 
+  if (exit) {
+    display_help();
+    return 0;
+  }
+
   while (!exit) {
     struct error errors[MAX_ERR] = {};
     int len = parse(cmd, errors);
@@ -17,4 +23,6 @@ int main(int argc, char **argv) {
 
     exit = init(len, errors);
   }
+
+  return 0;
 }
