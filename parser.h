@@ -29,10 +29,12 @@ int parse(const char *cmd, struct error *errors) {
     struct error e = {.line = -1, .col = -1};
     sscanf(buffer, "%[^:]:%d:%d: %[^\n]", e.file, &e.line, &e.col, e.msg);
 
-    if (e.line != -1 && e.col != -1) {
-      errors[++len] = e;
+    if (e.line == -1 || e.col == -1) {
+      if (len) {
+        stradd(errors[len - 1].context, buffer, '\0');
+      }
     } else {
-      stradd(errors[len].context, buffer, '\0');
+      errors[len++] = e;
     }
   }
 
