@@ -8,15 +8,6 @@ struct error {
 
 const int MAX_ERR = 20;
 
-void buildcommand(char *cmd, int argc, char **argv) {
-  for (int i = 1; i < argc; i++) {
-    stradd(cmd, argv[i], ' ');
-  }
-
-  // capture stdout and stderr
-  stradd(cmd, "2>&1", '\0');
-}
-
 int parse(const char *cmd, struct error *errors) {
   FILE *proc = popen(cmd, "r");
 
