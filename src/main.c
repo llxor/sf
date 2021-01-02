@@ -9,10 +9,8 @@ int main(int argc, char **argv) {
 
   int exit = argc < 2;
 
-  if (exit) {
+  if (exit)
     display_help();
-    return 0;
-  }
 
   while (!exit) {
     struct error errors[MAX_ERR] = {};
