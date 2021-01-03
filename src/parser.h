@@ -33,3 +33,10 @@ int parse(const char *cmd, struct error *errors) {
   pclose(proc);
   return len;
 }
+
+void buildcmd(char *cmd, int argc, char **argv) {
+  for (int i = 1; i < argc; i++) {
+    sprintf(cmd, "%s%s%c", cmd, argv[i], ' ');
+  }
+  sprintf(cmd, "%s 2>&1", cmd);
+}

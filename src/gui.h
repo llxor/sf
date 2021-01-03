@@ -1,3 +1,4 @@
+#import <editor.h>
 #import <ncurses.h>
 #import <parser.h>
 
@@ -46,12 +47,6 @@ void render(int selected, int W, int N, struct error errors[N]) {
   }
 }
 
-void edit(struct error e) {
-  char cmd[1000] = {};
-  sprintf(cmd, "vim %s '+normal %dG%d|'", e.file, e.line, e.col);
-  system(cmd);
-}
-
 int init(int N, struct error errors[N]) {
   int width = init_render();
   int selected = 0, exitcode = 0;
@@ -72,7 +67,8 @@ int init(int N, struct error errors[N]) {
       break;
 
     case '\n':
-      edit(errors[selected]);
+      load_command(errors[selected]);
+      system(command);
       selected = -1;
       break;
 

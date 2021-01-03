@@ -7,6 +7,10 @@ sf provides a simple frontend to compilers.
 - *Enter:* opens the file at the location of the error/warning
 - *q:* quits the application
 
+**Config:**
+The default config is `vim [file] '+normal [line]G[col]|'`
+This can be edited in `src/config.h`
+
 **Installation:**
 ```
 # install dependencies (Debian 10)
