@@ -1,5 +1,5 @@
 #import <stdio.h>
-#import <utils.h>
+#import <stdlib.h>
 
 struct error {
   char file[100], msg[500];
@@ -12,7 +12,8 @@ int parse(const char *cmd, struct error *errors) {
   FILE *proc = popen(cmd, "r");
 
   if (proc == NULL) {
-    error("process failed to start");
+    puts("process failed to start");
+    exit(1);
   }
 
   char buffer[1000];

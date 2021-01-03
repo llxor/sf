@@ -1,7 +1,5 @@
 #import <ncurses.h>
 #import <parser.h>
-#import <string.h>
-#import <utils.h>
 
 void printh(int width, const char *msg) {
   char buffer[1000] = {};
