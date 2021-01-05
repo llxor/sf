@@ -7,6 +7,7 @@ struct error {
 };
 
 const int MAX_ERR = 20;
+int exitcode = 0;
 
 int parse(const char *cmd, struct error *errors) {
   FILE *proc = popen(cmd, "r");
@@ -25,12 +26,13 @@ int parse(const char *cmd, struct error *errors) {
 
     if (e.line != -1 && e.col != -1) {
       errors[len++] = e;
-      if (len == MAX_ERR)
+      if (len == MAX_ERR) {
         break;
+      }
     }
   }
 
-  pclose(proc);
+  exitcode = WEXITSTATUS(pclose(proc));
   return len;
 }
 

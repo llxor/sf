@@ -45,6 +45,8 @@ void render(int selected, int W, int N, struct error errors[N]) {
       printw("%s\n", buffer);
     }
   }
+
+  printw("\nCompilation finished with exit code %d\n", exitcode);
 }
 
 int init(int N, struct error errors[N]) {
