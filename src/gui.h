@@ -12,9 +12,9 @@ void printh(int width, const char *msg) {
     }
   }
 
-  attron(A_STANDOUT);
+  attron(A_STANDOUT | A_BOLD);
   printw(buffer);
-  attroff(A_STANDOUT);
+  attroff(A_STANDOUT | A_BOLD);
 }
 
 int init_render() {
