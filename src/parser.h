@@ -1,5 +1,6 @@
 #import <stdio.h>
 #import <stdlib.h>
+#import <string.h>
 
 struct error {
   char file[100], msg[500];
@@ -9,7 +10,7 @@ struct error {
 const int MAX_ERR = 20;
 int exitcode = 0;
 
-int parse(const char *cmd, struct error *errors) {
+int parse(const char cmd[], struct error errors[MAX_ERR], char exe[]) {
   FILE *proc = popen(cmd, "r");
 
   if (proc == NULL) {
@@ -26,9 +27,15 @@ int parse(const char *cmd, struct error *errors) {
 
     if (e.line != -1 && e.col != -1) {
       errors[len++] = e;
-      if (len == MAX_ERR) {
-        break;
-      }
+    }
+
+    else if (strcmp(e.file, exe) == 0) {
+      sscanf(buffer, "%[^\n]", e.msg);
+      errors[len++] = e;
+    }
+
+    if (len == MAX_ERR) {
+      break;
     }
   }
 

@@ -14,7 +14,7 @@ int main(int argc, char **argv) {
 
   while (!exit) {
     struct error errors[MAX_ERR] = {};
-    int len = parse(cmd, errors);
+    int len = parse(cmd, errors, argv[1]);
 
     if (len == 0) {
       break;

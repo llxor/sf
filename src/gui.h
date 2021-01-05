@@ -37,7 +37,12 @@ void render(int selected, int W, int N, struct error errors[N]) {
     struct error e = errors[i];
 
     char buffer[1000] = {};
-    sprintf(buffer, "%s:%d:%d: %s", e.file, e.line, e.col, e.msg);
+
+    if (e.line == -1 && e.col == -1) {
+      sprintf(buffer, "%s", e.msg);
+    } else {
+      sprintf(buffer, "%s:%d:%d: %s", e.file, e.line, e.col, e.msg);
+    }
 
     if (i == selected) {
       printh(W, buffer);
@@ -69,9 +74,11 @@ int init(int N, struct error errors[N]) {
       break;
 
     case '\n':
-      load_command(errors[selected]);
-      system(command);
-      selected = -1;
+      if (errors[selected].line != -1 && errors[selected].col != -1) {
+        load_command(errors[selected]);
+        system(command);
+        selected = -1;
+      }
       break;
 
     case 'q':
