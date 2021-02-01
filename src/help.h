@@ -1,5 +1,3 @@
-#import <stdio.h>
-
 const char *help_msg =
     "USAGE: sf [command]\n\n"
     "sf provides a simple frontend to compilers.\n\n"
@@ -9,4 +7,7 @@ const char *help_msg =
     "- q: quits the application\n\n"
     "Report bugs to https://github.com/llxor/sf";
 
-void display_help() { puts(help_msg); }
+void display_help()
+{
+	puts(help_msg);
+}

@@ -1,27 +1,36 @@
-#import <gui.h>
-#import <help.h>
-#import <parser.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-int main(int argc, char **argv) {
-  char cmd[1000] = {};
-  buildcmd(cmd, argc, argv);
+#include <ncurses.h>
+#include <parser.h>
 
-  int exit = argc < 2;
+#include <config.h>
+#include <editor.h>
+#include <gui.h>
+#include <help.h>
 
-  if (exit) {
-    display_help();
-  }
+int main(int argc, char **argv)
+{
+	char cmd[1000] = { };
+	buildcmd(cmd, argc, argv);
 
-  while (!exit) {
-    struct error errors[MAX_ERR] = {};
-    int len = parse(cmd, errors, argv[1]);
+	int exit = argc < 2;
 
-    if (len == 0) {
-      break;
-    }
+	if (exit) {
+		display_help();
+	}
 
-    exit = init(len, errors);
-  }
+	while (!exit) {
+		struct error errors[MAX_ERR];
+		int len = parse(cmd, errors, argv[1]);
 
-  return 0;
+		if (len == 0) {
+			break;
+		}
+
+		exit = init(len, errors);
+	}
+
+	return 0;
 }

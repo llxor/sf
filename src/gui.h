@@ -1,93 +1,113 @@
-#import <editor.h>
-#import <ncurses.h>
-#import <parser.h>
+void printh(int width, const char *msg)
+{
+	char buffer[1000] = { };
+	sprintf(buffer, "%s", msg);
 
-void printh(int width, const char *msg) {
-  char buffer[1000] = {};
-  sprintf(buffer, "%s", msg);
+	for (int i = 0; i < width; i++) {
+		if (buffer[i] == '\0') {
+			buffer[i] = ' ';
+		}
+	}
 
-  for (int i = 0; i < width; i++) {
-    if (buffer[i] == '\0') {
-      buffer[i] = ' ';
-    }
-  }
-
-  attron(A_STANDOUT | A_BOLD);
-  printw(buffer);
-  attroff(A_STANDOUT | A_BOLD);
+	attron(A_STANDOUT | A_BOLD);
+	printw(buffer);
+	attroff(A_STANDOUT | A_BOLD);
 }
 
-int init_render() {
-  WINDOW *win = initscr();
+int init_render()
+{
+	WINDOW *win = initscr();
 
-  keypad(stdscr, TRUE);
-  curs_set(0);
-  noecho();
+	keypad(stdscr, TRUE);
+	curs_set(0);
+	noecho();
 
-  int width, height;
-  getmaxyx(win, height, width);
+	int width, height;
+	getmaxyx(win, height, width);
+	(void)height;
 
-  return width;
+	return width;
 }
 
-void render(int selected, int W, int N, struct error errors[N]) {
-  clear();
+void render(int selected, int W, int N, struct error errors[N])
+{
+	clear();
+	endwin();
 
-  for (int i = 0; i < N; i++) {
-    struct error e = errors[i];
+	for (int i = 0; i < N; i++) {
+		struct error e = errors[i];
 
-    char buffer[1000] = {};
+		char buffer[1000] = { };
 
-    if (e.line == -1 && e.col == -1) {
-      sprintf(buffer, "%s", e.msg);
-    } else {
-      sprintf(buffer, "%s:%d:%d: %s", e.file, e.line, e.col, e.msg);
-    }
+		if (e.line == -1 && e.col == -1) {
+			sprintf(buffer, "%s", e.msg);
+		} else {
+			sprintf(buffer, "%s:%d:%d: %s", e.file, e.line, e.col,
+				e.msg);
+		}
 
-    if (i == selected) {
-      printh(W, buffer);
-    } else {
-      printw("%s\n", buffer);
-    }
-  }
+		for (int i = 0, len = 0;; i++, len++) {
+			if (buffer[i] == 0) {
+				buffer[len] = 0;
+				break;
+			}
 
-  printw("\nCompilation finished with exit code %d\n", exitcode);
+			if (buffer[i] == -30) {
+				buffer[len] = '\'';
+				i += 2;
+			}
+
+			else {
+				buffer[len] = buffer[i];
+			}
+		}
+
+		if (i == selected) {
+			printh(W, buffer);
+		} else {
+			printw("%s\n", buffer);
+		}
+	}
+
+	printw("\nCompilation finished with exit code %d\n", exitcode);
 }
 
-int init(int N, struct error errors[N]) {
-  int width = init_render();
-  int selected = 0, exitcode = 0;
+int init(int N, struct error errors[N])
+{
+	int width = init_render();
+	int selected = 0, exitcode = 0;
 
-  while (selected != -1) {
-    render(selected, width, N, errors);
-    int key = getch();
+	while (selected != -1) {
+		render(selected, width, N, errors);
+		int key = getch();
 
-    switch (key) {
-    case KEY_UP:
-      if (selected != 0)
-        selected--;
-      break;
+		switch (key) {
+		case KEY_UP:
+			if (selected != 0)
+				selected--;
+			break;
 
-    case KEY_DOWN:
-      if (selected != N - 1)
-        selected++;
-      break;
+		case KEY_DOWN:
+			if (selected != N - 1)
+				selected++;
+			break;
 
-    case '\n':
-      if (errors[selected].line != -1 && errors[selected].col != -1) {
-        load_command(errors[selected]);
-        system(command);
-        selected = -1;
-      }
-      break;
+		case '\n':
+			if (errors[selected].line != -1
+			    && errors[selected].col != -1) {
+				load_command(errors[selected]);
+				system(command);
+				selected = -1;
+			}
+			break;
 
-    case 'q':
-      selected = -1;
-      exitcode = 1;
-      break;
-    }
-  }
+		case 'q':
+			selected = -1;
+			exitcode = 1;
+			break;
+		}
+	}
 
-  endwin();
-  return exitcode;
+	endwin();
+	return exitcode;
 }
