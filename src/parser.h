@@ -3,7 +3,7 @@ struct error {
 	int line, col;
 };
 
-enum MAX_ERR { MAX_ERR = 20 };
+enum { MAX_ERR = 20 };
 int exitcode = 0;
 
 int parse(const char cmd[], struct error errors[MAX_ERR], char exe[])
