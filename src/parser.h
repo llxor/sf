@@ -20,10 +20,14 @@ int parse(const char cmd[], struct error errors[MAX_ERR], char exe[])
 
 	while (fgets(buffer, sizeof buffer, proc) != NULL) {
 		struct error e = {.line = -1,.col = -1 };
-		sscanf(buffer, "%[^:]:%d:%d: %[^\n]", e.file, &e.line, &e.col,
-		       e.msg);
+		sscanf(buffer, "%[^:]:%d:%d: %[^\n]", e.file, &e.line, &e.col, e.msg);
 
-		if (e.line != -1 && e.col != -1) {
+		if (e.line != -1) {
+			if (e.col == -1) {
+				sscanf(buffer, "%[^:]:%d: %[^\n]", e.file, &e.line, e.msg);
+				e.col = 0;
+			}
+
 			errors[len++] = e;
 		}
 

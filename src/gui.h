@@ -10,7 +10,7 @@ void printh(int width, const char *msg)
 	}
 
 	attron(A_STANDOUT | A_BOLD);
-	printw(buffer);
+	printw("%s", buffer);
 	attroff(A_STANDOUT | A_BOLD);
 }
 
@@ -96,7 +96,8 @@ int init(int N, struct error errors[N])
 			if (errors[selected].line != -1
 			    && errors[selected].col != -1) {
 				load_command(errors[selected]);
-				system(command);
+				int exit = system(command);
+				(void) exit;
 				selected = -1;
 			}
 			break;
