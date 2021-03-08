@@ -8,7 +8,7 @@ sf provides a simple frontend to compilers.
 - *q:* quits the application
 
 **Config:**
-- The default config is `vim [file] '+normal [line]G[col]|'`
+- The default config is `vim %f '+normal %lG%c|'`
 - This can be edited in `src/config.h`
 
 **Installation:**
