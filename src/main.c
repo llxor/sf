@@ -6,13 +6,12 @@
 #include <parser.h>
 
 #include <config.h>
-#include <editor.h>
 #include <gui.h>
 #include <help.h>
 
 int main(int argc, char **argv)
 {
-	char cmd[1000] = { };
+	char cmd[1000] = {0};
 	buildcmd(cmd, argc, argv);
 
 	int exit = argc < 2;

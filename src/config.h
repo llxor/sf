@@ -1,1 +1,3 @@
-const char *editor = "vim [file] '+normal [line]G[col]|'";
+#pragma once
+const char *editor = "vim %f '+normal %lG%c|'";
+enum { MAX_ERR = 20 };

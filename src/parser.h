@@ -1,9 +1,20 @@
-struct error {
+#include <config.h>
+
+struct error
+{
 	char file[100], msg[500];
 	int line, col;
 };
 
-enum { MAX_ERR = 20 };
+void buildcmd(char *cmd, int argc, char **argv)
+{
+	for (int i = 1; i < argc; i++) {
+		strcat(cmd, argv[i]);
+		strcat(cmd, " ");
+	}
+	strcat(cmd, " 2>&1");
+}
+
 int exitcode = 0;
 
 int parse(const char cmd[], struct error errors[MAX_ERR], char exe[])
@@ -45,11 +56,36 @@ int parse(const char cmd[], struct error errors[MAX_ERR], char exe[])
 	return len;
 }
 
-void buildcmd(char *cmd, int argc, char **argv)
+char command[1000] = {0};
+void load_command(struct error err)
 {
-	for (int i = 1; i < argc; i++) {
-		strcat(cmd, argv[i]);
-		strcat(cmd, " ");
+	const char *src = editor;
+	char *write = command;
+
+	while (*src)
+	{
+		if (*src == '%')
+		{
+			switch(*(++src))
+			{
+			case 'f':
+				strcpy(write, err.file);
+				write += strlen(err.file);
+				break;
+
+			case 'l':
+				  write += sprintf(write, "%d", err.line);
+				  break;
+
+			case 'c':
+				  write += sprintf(write, "%d", err.col);
+				  break;
+			}
+			src++;
+		}
+
+		else {
+			*write++ = *src++;
+		}
 	}
-	strcat(cmd, " 2>&1");
 }

@@ -1,7 +1,7 @@
 void printh(int width, const char *msg)
 {
-	char buffer[1000] = { };
-	sprintf(buffer, "%s", msg);
+	char buffer[1000] = {0};
+	strcpy(buffer, msg);
 
 	for (int i = 0; i < width; i++) {
 		if (buffer[i] == '\0') {
@@ -37,10 +37,10 @@ void render(int selected, int W, int N, struct error errors[N])
 	for (int i = 0; i < N; i++) {
 		struct error e = errors[i];
 
-		char buffer[1000] = { };
+		char buffer[1000] = {0};
 
 		if (e.line == -1 && e.col == -1) {
-			sprintf(buffer, "%s", e.msg);
+			strcpy(buffer, e.msg);
 		} else {
 			sprintf(buffer, "%s:%d:%d: %s", e.file, e.line, e.col,
 				e.msg);
