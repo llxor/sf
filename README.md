@@ -1,6 +1,6 @@
 # sf
 
-sf provides a simple frontend to compilers.
+sf provides a simple frontend for compilers.
 
 **Keybindings:**
 - *Up / Down*: navigates though the error/warning messages
