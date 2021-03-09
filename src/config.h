@@ -1,2 +1,4 @@
 const char *editor = "vim %f '+normal %lG%c|'";
-enum { MAX_ERR = 20 };
+
+#define MAX_ERR 20
+#define TABSTOP  8

@@ -99,28 +99,34 @@ render(const int selected, const int width)
 
 	for (int i = 0; i < ERR_COUNT; i++)
 	{
-		char buffer[width + 1];
-		memset(buffer, ' ', width);
-		buffer[width] = 0;
+		char buffer[width];
 		#define ERROR (ERR_BUFF[i])
 
 		int off = snprintf(buffer, width,
-				   "%s:%d:%d: %s\n",
+				   "%s:%d:%d:%s",
 				   ERROR.file,
 				   ERROR.line, ERROR.col,
 				   ERROR.msg + ERROR.off
 				  );
 
-		int attrib = 0;
+		char display[width];
+		memset(display, ' ', width);
+		int count = 0;
 
-		if (selected == i)
+		for (int i = 0; i < off; i++)
 		{
-			attrib |= A_STANDOUT | A_BOLD;
-			buffer[off-1] = buffer[off] = ' ';
+			if (buffer[i] == '\t')
+				for (int j = 0; j < TABSTOP; j++)
+					display[count++] = ' ';
+
+			else
+				display[count++] = buffer[i];
 		}
 
+		int attrib = (A_STANDOUT | A_BOLD) * (selected == i);
+
 		attron(attrib);
-		printw("%s", buffer);
+		printw("%.*s", width, display);
 		attroff(attrib);
 	}
 
