@@ -9,7 +9,7 @@ sf provides a simple frontend for compilers.
 
 **Config:**
 - The default config is `vim %f '+normal %lG%c|'`
-- This can be edited in `src/config.h`
+- This can be edited in `config.h`
 
 **Installation:**
 ```
