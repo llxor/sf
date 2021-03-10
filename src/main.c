@@ -143,7 +143,6 @@ main_gui()
 
 	int width = getmaxx(win);
 	int selected = 0;
-	int exitcode = 0;
 
 	do 
 	{
@@ -154,20 +153,21 @@ main_gui()
 		{
 		case KEY_UP:   selected--; break;
 		case KEY_DOWN: selected++; break;
-		case '\n':     edit(selected);
+
+		case '\n':
+			endwin();
+			edit(selected);
+			return 0;
+
 		case 'q':
-			exitcode -= (key == 'q');
-			goto end;
+			endwin();
+			return -1;
 		}
 
 		selected &= -(selected > 0);
 		selected -=  (selected == ERR_COUNT);
 	}
 	while (1);
-
-end:
-	endwin();
-	return exitcode;
 }
 
 int
