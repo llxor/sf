@@ -164,8 +164,8 @@ main_gui()
 			return -1;
 		}
 
-		selected &= -(selected > 0);
-		selected -=  (selected == ERR_COUNT);
+		selected += (selected == -1);
+		selected -= (selected == ERR_COUNT);
 	}
 	while (1);
 }
