@@ -61,7 +61,7 @@ edit(const int selected)
 	char cmd[1000] = {0};
 	char *write = cmd;
 
-	const char *read = editor;
+	const char *read = EDITOR;
 	char c;
 
 	while ((c = *read++))
