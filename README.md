@@ -17,7 +17,7 @@ sf provides a simple frontend for compilers.
 sudo apt install libncurses5-dev libncursesw5-dev
 
 # download repo
-git clone https://github.com/llxor/sf
+git clone https://github.com/ellxor/sf
 
 cd sf
 make install

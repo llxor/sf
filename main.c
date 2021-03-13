@@ -180,7 +180,7 @@ main(int argc, char **argv)
 		     "  - Up / Down: navigates though the error/warning messages\n"
 		     "  - Enter: opens the file at the location of the error/warning\n"
 		     "  - q: quits the application\n\n"
-		     "Report bugs to https://github.com/llxor/sf"
+		     "Report bugs to https://github.com/ellxor/sf"
 		    );
 		exit(0);
 	}
