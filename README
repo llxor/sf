@@ -16,6 +16,6 @@ follows; %f - file, %l - line and %c - col.
 
                                   installation
 
-to install sf, first install the dependencies, libncurses5-dev on debain-based
+to install sf, first install the dependencies, `libncurses5-dev` on debian-based
 systems. then clone this repository and run ./build.sh. to uninstall this
 software delete sf from /usr/bin/.
