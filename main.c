@@ -150,8 +150,8 @@ main_gui()
 
 		switch (key)
 		{
-		case KEY_UP:   selected--; break;
-		case KEY_DOWN: selected++; break;
+                case 'k': case KEY_UP:   selected--; break;
+                case 'j': case KEY_DOWN: selected++; break;
 
 		case '\n':
 			endwin();
@@ -175,11 +175,7 @@ main(int argc, char **argv)
 	if (argc < 2)
 	{
 		puts("USAGE: sf [command]\n\n"
-		     "sf provides a simple frontend to command line tools.\n\n"
-		     "Keybindings:\n"
-		     "  - Up / Down: navigates though the error/warning messages\n"
-		     "  - Enter: opens the file at the location of the error/warning\n"
-		     "  - q: quits the application\n\n"
+		     "sf provides a simple frontend to command line tools.\n"
 		     "Report bugs to https://github.com/ellxor/sf"
 		    );
 		exit(0);
