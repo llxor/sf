@@ -1,0 +1,21 @@
+                                       sf
+
+sf provides a simple frontend for compilers and other command line tools, such
+as grep (and other variants).
+
+                                  keybindings
+
+j/k: navigates though the error/warning messages
+ret: opens the file at the location of the error/warning
+ q : quits the application
+
+                                     config
+
+the default config is located in config.h, and the escape sequences are as
+follows; %f - file, %l - line and %c - col.
+
+                                  installation
+
+to install sf, first install the dependencies, libncurses5-dev on debain-based
+systems. then clone this repository and run ./build.sh. to uninstall this
+software delete sf from /usr/bin/.
