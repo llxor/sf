@@ -1,3 +1,3 @@
-#define EDITOR "nvim %f '+normal %lG%c|'"
+#define EDITOR "vi +%l %f"
 #define MAX_ERR 20
-#define TABSTOP  8
+#define TABSTOP 8
