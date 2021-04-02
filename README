@@ -11,7 +11,7 @@ ret: opens the file at the location of the error/warning
 --- configuration ---
 
 The default config is located in config.h, and the escape sequences are as
-follows; %f - file, %l - line and %c - col.
+follows; %f: file, %l: line and %c: col.
 
 
 --- installation ---
