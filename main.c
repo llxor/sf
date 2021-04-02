@@ -174,7 +174,7 @@ int main(int argc, char **argv)
         if (argc < 2) {
                 puts("USAGE: sf [command]\n\n"
                      "sf provides a simple frontend to command line tools.\n"
-                     "Report bugs to https://github.com/ellxor/sf");
+                     "Report bugs to ellxor@protonmail.ch");
                 exit(0);
         }
 
