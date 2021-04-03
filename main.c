@@ -91,12 +91,16 @@ static void render(const int selected, const int width)
         clear();
 
         for (int i = 0; i < ERR_COUNT; i++) {
-                char buffer[width];
+                char buffer[width + 1];
 #define ERROR (ERR_BUFF[i])
 
                 int off =
-                    snprintf(buffer, width, "%s:%d:%d:%s", ERROR.file,
+                    snprintf(buffer, sizeof(buffer), "%s:%d:%d:%s", ERROR.file,
                              ERROR.line, ERROR.col, ERROR.msg + ERROR.off);
+
+                if (off > width) {
+                        off = width;
+                }
 
                 char display[width];
                 memset(display, ' ', width);
