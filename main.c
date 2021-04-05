@@ -95,7 +95,7 @@ static void render(const int selected, const int width)
 #define ERROR (ERR_BUFF[i])
 
                 int off =
-                    snprintf(buffer, sizeof(buffer), "%s:%d:%d:%s", ERROR.file,
+                    snprintf(buffer, sizeof(buffer), " %s:%d:%d:%s", ERROR.file,
                              ERROR.line, ERROR.col, ERROR.msg + ERROR.off);
 
                 if (off > width) {
@@ -123,14 +123,11 @@ static void render(const int selected, const int width)
         }
 
         start_color();
-        init_pair(1, COLOR_GREEN, COLOR_BLACK);
+        init_pair(1, COLOR_EXIT_CODE, COLOR_BLACK);
 
         attron(COLOR_PAIR(1) | A_BOLD);
-        printw("[ exit code %d ]\n", EXIT_CODE);
+        printw("\n [ exit code %d ]\n", EXIT_CODE);
         attroff(COLOR_PAIR(1) | A_BOLD);
-
-        for (int i = 0; i < 10; i++)
-                printw("\n");
 }
 
 static int main_gui()
