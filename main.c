@@ -7,18 +7,18 @@
 #define NORMAL   1
 #define EXIT_MSG 2
 
-typedef struct
+struct error_t
 {
 	char file[100], msg[500];
 	int line, col, off;
-} error_t;
+};
 
 static void concat(char **dst, const char *src)
 {
 	while (*src) *(*dst)++ = *src++;
 }
 
-static error_t ERR_BUFF[MAX_ERR] = {0};
+static struct error_t ERR_BUFF[MAX_ERR];
 static int ERR_COUNT = 0;
 static int EXIT_CODE = 0;
 
@@ -38,8 +38,9 @@ static void parse(const char *cmd)
 	while (ERR_COUNT < MAX_ERR && fgets(buffer, sizeof buffer, proc))
 	{
 		ERROR.line = ERROR.col = -1;
-		sscanf(buffer, "%[^:]:%d:%[^\n]", ERROR.file, &ERROR.line,
-		ERROR.msg);
+
+		sscanf(buffer, "%[^:]:%d:%[^\n]",
+			ERROR.file, &ERROR.line, ERROR.msg);
 
 		if (ERROR.line != -1)
 		{
