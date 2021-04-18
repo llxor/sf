@@ -4,193 +4,220 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct error {
-        char file[100], msg[500];
-        int line, col, off;
-};
+#define NORMAL   1
+#define EXIT_MSG 2
+
+typedef struct
+{
+	char file[100], msg[500];
+	int line, col, off;
+} error_t;
 
 static void concat(char **dst, const char *src)
 {
-        while (*src)
-                *(*dst)++ = *src++;
+	while (*src) *(*dst)++ = *src++;
 }
 
-static struct error ERR_BUFF[MAX_ERR] = {0};
+static error_t ERR_BUFF[MAX_ERR] = {0};
 static int ERR_COUNT = 0;
 static int EXIT_CODE = 0;
 
 static void parse(const char *cmd)
 {
-        FILE *proc = popen(cmd, "r");
-        if (proc == NULL) {
-                puts("error process failed to start");
-                exit(-1);
-        }
+	FILE *proc = popen(cmd, "r");
+	if (proc == NULL)
+	{
+		puts("error process failed to start");
+		exit(-1);
+	}
 
-        ERR_COUNT = 0;
-        char buffer[1000] = {0};
-#define ERROR (ERR_BUFF[ERR_COUNT])
+	ERR_COUNT = 0;
+	char buffer[1000] = {0};
+	#define ERROR (ERR_BUFF[ERR_COUNT])
 
-        while (ERR_COUNT < MAX_ERR && fgets(buffer, sizeof buffer, proc)) {
-                ERROR.line = ERROR.col = -1;
-                sscanf(buffer, "%[^:]:%d:%[^\n]", ERROR.file, &ERROR.line,
-                       ERROR.msg);
+	while (ERR_COUNT < MAX_ERR && fgets(buffer, sizeof buffer, proc))
+	{
+		ERROR.line = ERROR.col = -1;
+		sscanf(buffer, "%[^:]:%d:%[^\n]", ERROR.file, &ERROR.line,
+		ERROR.msg);
 
-                if (ERROR.line != -1) {
-                        char *end = ERROR.msg;
-                        ERROR.col = strtol(end, &end, 10);
-                        ERROR.off = end - (char *)ERROR.msg + (*end == ':');
-                        ERR_COUNT++;
-                }
-        }
-#undef ERROR
+		if (ERROR.line != -1)
+		{
+			char *end = ERROR.msg;
+			ERROR.col = strtol(end, &end, 10);
+			ERROR.off = end - (char *)ERROR.msg + (*end == ':');
+			ERR_COUNT++;
+		}
+	}
+	#undef ERROR
 
-        EXIT_CODE = WEXITSTATUS(pclose(proc));
+	EXIT_CODE = WEXITSTATUS(pclose(proc));
 }
 
 static void edit(const int selected)
 {
-#define ERROR (ERR_BUFF[selected])
+	#define ERROR (ERR_BUFF[selected])
 
-        char cmd[1000] = {0};
-        char *write = cmd;
+	char cmd[1000] = {0};
+	char *write = cmd;
 
-        const char *read = EDITOR;
-        char c;
+	const char *read = EDITOR;
+	char c;
 
-        while ((c = *read++)) {
-                if (c == '%') {
-                        switch (*read++) {
-                        case 'f':
-                                concat(&write, ERROR.file);
-                                break;
-                        case 'l':
-                                write += sprintf(write, "%d", ERROR.line);
-                                break;
-                        case 'c':
-                                write += sprintf(write, "%d", ERROR.col);
-                                break;
-                        }
-                }
+	while ((c = *read++))
+	{
+		if (c == '%')
+		{
+			switch (*read++)
+			{
+			case 'f':
+				concat(&write, ERROR.file);
+				break;
+			case 'l':
+				write += sprintf(write, "%d", ERROR.line);
+				break;
+			case 'c':
+				write += sprintf(write, "%d", ERROR.col);
+				break;
+			}
+		}
 
-                else {
-                        *write++ = c;
-                }
-        }
+		else {
+			*write++ = c;
+		}
+	}
 
-        if (system(cmd)) {
-                endwin();
-                printf("editor failed to open file %s\n", ERROR.file);
-                exit(-1);
-        };
-#undef ERROR
+	if (system(cmd))
+	{
+		endwin();
+		printf("editor failed to open file %s\n", ERROR.file);
+		exit(-1);
+	}
+
+	#undef ERROR
 }
 
 static void render(const int selected, const int width)
 {
-        clear();
+	clear();
 
-        for (int i = 0; i < ERR_COUNT; i++) {
-                char buffer[width + 1];
-#define ERROR (ERR_BUFF[i])
+	for (int i = 0; i < ERR_COUNT; i++)
+	{
+		char buffer[width + 1];
+		#define ERROR (ERR_BUFF[i])
 
-                int off =
-                    snprintf(buffer, sizeof(buffer), " %s:%d:%d:%s", ERROR.file,
-                             ERROR.line, ERROR.col, ERROR.msg + ERROR.off);
+		int off = snprintf(buffer, sizeof(buffer), " %s:%d:%d:%s",
+				   ERROR.file, ERROR.line, ERROR.col,
+				   ERROR.msg + ERROR.off);
 
-                if (off > width) {
-                        off = width;
-                }
+		if (off > width)
+		{
+			off = width;
+		}
 
-                char display[width];
-                memset(display, ' ', width);
-                int count = 0;
+		char display[width];
+		memset(display, ' ', width);
+		int count = 0;
 
-                for (int i = 0; i < off; i++) {
-                        if (buffer[i] == '\t')
-                                for (int j = 0; j < TABSTOP; j++)
-                                        display[count++] = ' ';
+		for (int i = 0; i < off; i++)
+		{
+			if (buffer[i] == '\t')
+			{
+				for (int j = 0; j < TABSTOP; j++)
+				{
+					display[count++] = ' ';
+				}
+			}
 
-                        else
-                                display[count++] = buffer[i];
-                }
+			else {
+				display[count++] = buffer[i];
+			}
+		}
 
-                int attrib = (A_STANDOUT | A_BOLD) * (selected == i);
+		int attrib = (selected == i) * (A_STANDOUT);
 
-                attron(attrib);
-                printw("%.*s", width, display);
-                attroff(attrib);
-        }
+		attron(attrib);
+		printw("%.*s", width, display);
+		attroff(attrib);
+	}
 
-        start_color();
-        init_pair(1, COLOR_EXIT_CODE, COLOR_BLACK);
-
-        attron(COLOR_PAIR(1) | A_BOLD);
-        printw("\n [ exit code %d ]\n", EXIT_CODE);
-        attroff(COLOR_PAIR(1) | A_BOLD);
+	attron(COLOR_PAIR(EXIT_MSG));
+	printw("\n [ exit code %d ]\n", EXIT_CODE);
+	attroff(COLOR_PAIR(EXIT_MSG));
 }
 
 static int main_gui()
 {
-        WINDOW *win = initscr();
-        keypad(stdscr, TRUE);
-        curs_set(0);
-        noecho();
+	WINDOW *win = initscr();
+	keypad(stdscr, TRUE);
+	start_color();
+	curs_set(0);
+	noecho();
 
-        int width = getmaxx(win);
-        int selected = 0;
+	init_pair(NORMAL, FOREGROUND_COLOR, BACKGROUND_COLOR);
+	init_pair(EXIT_MSG, EXIT_CODE_COLOR, BACKGROUND_COLOR);
 
-        do {
-                render(selected, width);
-                int key = getch();
+	wbkgd(win, COLOR_PAIR(NORMAL));
 
-                switch (key) {
-                case 'k':
-                case KEY_UP:
-                        selected--;
-                        break;
+	const int width = getmaxx(win);
+	int selected = 0;
 
-                case 'j':
-                case KEY_DOWN:
-                        selected++;
-                        break;
+	do {
+		render(selected, width);
+		int key = getch();
 
-                case '\n':
-                        endwin();
-                        edit(selected);
-                        return 0;
+		switch (key)
+		{
+		case 'k':
+			case KEY_UP:
+			selected--;
+			break;
 
-                case 'q':
-                        endwin();
-                        return -1;
-                }
+		case 'j':
+			case KEY_DOWN:
+			selected++;
+			break;
 
-                selected += (selected == -1);
-                selected -= (selected == ERR_COUNT);
-        } while (1);
+		case '\n':
+			endwin();
+			edit(selected);
+			return 0;
+
+		case 'q':
+			endwin();
+			return -1;
+		}
+
+		selected += (selected == -1);
+		selected -= (selected == ERR_COUNT);
+	}
+	while (1);
 }
 
 int main(int argc, char **argv)
 {
-        if (argc < 2) {
-                puts("USAGE: sf [command]\n\n"
-                     "sf provides a simple frontend to command line tools.\n"
-                     "Report bugs to ellxor@protonmail.ch");
-                exit(0);
-        }
+	if (argc < 2)
+	{
+		puts("USAGE: sf [command]\n\n"
+		     "sf provides a simple frontend to command line tools.\n"
+		     "Report bugs to ellxor@protonmail.ch");
+		exit(0);
+	}
 
-        char cmd[1000] = {0};
-        char *write = cmd;
+	char cmd[1000] = {0};
+	char *write = cmd;
 
-        for (int i = 1; i < argc; i++) {
-                concat(&write, argv[i]);
-                *write++ = ' ';
-        }
-        concat(&write, "2>&1");
+	for (int i = 1; i < argc; i++)
+	{
+		concat(&write, argv[i]);
+		*write++ = ' ';
+	}
+	concat(&write, "2>&1");
 
-        do {
-                parse(cmd);
-        } while (ERR_COUNT && main_gui() != -1);
+	do {
+		parse(cmd);
+	}
+	while (ERR_COUNT && main_gui() != -1);
 
-        return EXIT_CODE;
+	return EXIT_CODE;
 }
