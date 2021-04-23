@@ -15,7 +15,12 @@ struct error_t
 
 static void concat(char **dst, const char *src)
 {
-	while (*src) *(*dst)++ = *src++;
+	while (*src)
+	{
+		**dst = *src;
+		*dst += 1;
+		 src += 1;
+	}
 }
 
 static struct error_t ERR_BUFF[MAX_ERR];
@@ -47,7 +52,7 @@ static void parse(const char *cmd)
 			char *end = ERROR.msg;
 			ERROR.col = strtol(end, &end, 10);
 			ERROR.off = end - (char *)ERROR.msg + (*end == ':');
-			ERR_COUNT++;
+			ERR_COUNT += 1;
 		}
 	}
 	#undef ERROR
@@ -65,11 +70,13 @@ static void edit(const int selected)
 	const char *read = EDITOR;
 	char c;
 
-	while ((c = *read++))
+	while ((c = *read))
 	{
+		read += 1;
+
 		if (c == '%')
 		{
-			switch (*read++)
+			switch (*read)
 			{
 			case 'f':
 				concat(&write, ERROR.file);
@@ -81,17 +88,20 @@ static void edit(const int selected)
 				write += sprintf(write, "%d", ERROR.col);
 				break;
 			}
+
+			read += 1;
 		}
 
 		else {
-			*write++ = c;
+			*write = c;
+			write += 1;
 		}
 	}
 
 	if (system(cmd))
 	{
 		endwin();
-		printf("editor failed to open file %s\n", ERROR.file);
+		printf("editor failed to open file `%s`\n", ERROR.file);
 		exit(-1);
 	}
 
@@ -102,7 +112,7 @@ static void render(const int selected, const int width)
 {
 	clear();
 
-	for (int i = 0; i < ERR_COUNT; i++)
+	for (int i = 0; i < ERR_COUNT; i += 1)
 	{
 		char buffer[width + 1];
 		#define ERROR (ERR_BUFF[i])
@@ -120,22 +130,28 @@ static void render(const int selected, const int width)
 		memset(display, ' ', width);
 		int count = 0;
 
-		for (int i = 0; i < off; i++)
+		for (int i = 0; i < off; i += 1)
 		{
 			if (buffer[i] == '\t')
 			{
-				for (int j = 0; j < TABSTOP; j++)
+				for (int j = 0; j < TABSTOP; j += 1)
 				{
-					display[count++] = ' ';
+					display[count] = ' ';
+					count += 1;
 				}
 			}
 
 			else {
-				display[count++] = buffer[i];
+				display[count] = buffer[i];
+				count += 1;
 			}
 		}
 
-		int attrib = (selected == i) * (A_STANDOUT);
+		#ifdef HIGHLIGHT
+		int attrib = (selected == i) * (HIGHLIGHT);
+		#else
+		int attrib = 0;
+		#endif
 
 		attron(attrib);
 		printw("%.*s", width, display);
@@ -171,12 +187,12 @@ static int main_gui()
 		{
 		case 'k':
 			case KEY_UP:
-			selected--;
+			selected -= 1;
 			break;
 
 		case 'j':
 			case KEY_DOWN:
-			selected++;
+			selected += 1;
 			break;
 
 		case '\n':
@@ -208,10 +224,11 @@ int main(int argc, char **argv)
 	char cmd[1000] = {0};
 	char *write = cmd;
 
-	for (int i = 1; i < argc; i++)
+	for (int i = 1; i < argc; i += 1)
 	{
 		concat(&write, argv[i]);
-		*write++ = ' ';
+		*write = ' ';
+		write += 1;
 	}
 	concat(&write, "2>&1");
 
