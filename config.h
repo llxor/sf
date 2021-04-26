@@ -3,6 +3,6 @@
 #define TABSTOP  8
 
 #define FOREGROUND_COLOR 0
-#define BACKGROUND_COLOR 15
-#define EXIT_CODE_COLOR  15
+#define BACKGROUND_COLOR 7 
+#define EXIT_CODE_COLOR  7 
 #define HIGHLIGHT A_BOLD
