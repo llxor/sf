@@ -1,4 +1,4 @@
-#define EDITOR "nvi +%l %f"
+#define EDITOR "nvim +%l %f"
 #define MAX_ERR 20
 #define TABSTOP  8
 
