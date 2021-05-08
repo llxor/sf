@@ -1,27 +1,12 @@
+                                       sf
+
 sf provides a simple frontend for compilers and other command line tools, such
-as grep (and other variants).
+as gcc, clang and grep.
 
-			      --- keybindings ---
+Navigation is done using j/k or <UP>/<DOWN>, <ENTER> to open an error, and q
+to quit the interface.
 
-j/k: navigates though the error/warning messages
-ret: opens the file at the location of the error/warning
- q : quits the application
+In config.h, the editor escape sequences are; %f: file, %l: line and %c: col.
 
-
-			     --- configuration ---
-
-The default config is located in config.h, and the escape sequences are as
-follows; %f: file, %l: line and %c: col.
-
-
-			      --- installation ---
-
-To install sf, first install the dependencies, `ncurses` on your OS. Then
-clone this repository and run ./build.sh. To uninstall this software delete
-the sf binary from /usr/bin/.
-
-
-				--- license ---
-
-This software is freely distributed under the Zero-Clause BSD (0BSD) license.
-See `COPYING` for full info.
+To install sf, install `ncurses` on your OS, and then run `./build.sh`. To
+remove this software, delete /usr/bin/sf
