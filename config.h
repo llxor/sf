@@ -1,5 +1,5 @@
 #define EDITOR "nvim +%l %f"
-#define MAX_ERR 20
+#define MAX_ERR 30
 #define TABSTOP  8
 
 #define FOREGROUND_COLOR 8
