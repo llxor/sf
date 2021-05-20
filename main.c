@@ -17,11 +17,7 @@ struct error_t
 static void concat(char **dst, const char *src)
 {
 	while (*src)
-	{
-		**dst = *src;
-		*dst += 1;
-		 src += 1;
-	}
+		*(*dst)++ = *src++;
 }
 
 static struct error_t ERR_BUFF[MAX_ERR];
@@ -53,7 +49,7 @@ static void parse(const char *cmd)
 			char *end = ERROR.msg;
 			ERROR.col = strtol(end, &end, 10);
 			ERROR.off = end - (char *)ERROR.msg + (*end == ':');
-			ERR_COUNT += 1;
+			++ERR_COUNT;
 		}
 	}
 	#undef ERROR
@@ -71,10 +67,8 @@ static void edit(const int selected)
 	const char *read = EDITOR;
 	char c;
 
-	while ((c = *read))
+	while ((c = *read++))
 	{
-		read += 1;
-
 		if (c == '%')
 		{
 			switch (*read)
@@ -90,12 +84,11 @@ static void edit(const int selected)
 				break;
 			}
 
-			read += 1;
+			++read;
 		}
 
 		else {
-			*write = c;
-			write += 1;
+			*write++ = c;
 		}
 	}
 
@@ -113,7 +106,7 @@ static void render(const int selected, const int width)
 {
 	clear();
 
-	for (int i = 0; i < ERR_COUNT; i += 1)
+	for (int i = 0; i < ERR_COUNT; ++i)
 	{
 		char buffer[width + 1];
 		#define ERROR (ERR_BUFF[i])
@@ -131,20 +124,16 @@ static void render(const int selected, const int width)
 		memset(display, ' ', width);
 		int count = 0;
 
-		for (int i = 0; i < off; i += 1)
+		for (int i = 0; i < off; ++i)
 		{
 			if (buffer[i] == '\t')
 			{
-				for (int j = 0; j < TABSTOP; j += 1)
-				{
-					display[count] = ' ';
-					count += 1;
-				}
+				for (int j = 0; j < TABSTOP; ++j)
+					display[count++] = ' ';
 			}
 
 			else {
-				display[count] = buffer[i];
-				count += 1;
+				display[count++] = buffer[i];
 			}
 		}
 
@@ -186,12 +175,12 @@ static int main_gui()
 		{
 		case 'k':
 			case KEY_UP:
-			selected -= 1;
+			--selected;
 			break;
 
 		case 'j':
 			case KEY_DOWN:
-			selected += 1;
+			++selected;
 			break;
 
 		case '\n':
@@ -204,8 +193,8 @@ static int main_gui()
 			return -1;
 		}
 
-		selected += (selected == -1);
-		selected -= (selected == ERR_COUNT);
+		if (selected == -1)             ++selected;
+		if (selected == ERR_COUNT)      --selected;
 	}
 	while (1);
 }
@@ -223,11 +212,10 @@ int main(int argc, char **argv)
 	char cmd[1000] = {0};
 	char *write = cmd;
 
-	for (int i = 1; i < argc; i += 1)
+	for (int i = 1; i < argc; ++i)
 	{
 		concat(&write, argv[i]);
-		*write = ' ';
-		write += 1;
+		*write++ = ' ';
 	}
 	concat(&write, "2>&1");
 
