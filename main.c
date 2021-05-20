@@ -4,8 +4,9 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define NORMAL   1
-#define EXIT_MSG 2
+#define NORMAL    1
+#define HIGHLIGHT 2
+#define EXIT_MSG  3
 
 struct error_t
 {
@@ -147,11 +148,8 @@ static void render(const int selected, const int width)
 			}
 		}
 
-		#ifdef HIGHLIGHT
-		int attrib = (selected == i) * (HIGHLIGHT);
-		#else
-		int attrib = 0;
-		#endif
+                int attrib = 0;
+                if (selected == i) attrib = COLOR_PAIR(HIGHLIGHT);
 
 		attron(attrib);
 		printw("%.*s", width, display);
@@ -172,6 +170,7 @@ static int main_gui()
 	noecho();
 
 	init_pair(NORMAL, FOREGROUND_COLOR, BACKGROUND_COLOR);
+        init_pair(HIGHLIGHT, HIGHLIGHT_COLOR, BACKGROUND_COLOR);
 	init_pair(EXIT_MSG, EXIT_CODE_COLOR, BACKGROUND_COLOR);
 
 	wbkgd(win, COLOR_PAIR(NORMAL));
