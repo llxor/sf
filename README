@@ -1,7 +1,7 @@
                                        sf
 
 sf provides a simple frontend for compilers and other command line tools, such
-as gcc, clang and grep.
+as gcc, clang, make and grep.
 
 Navigation is done using j/k or <UP>/<DOWN>, <ENTER> to open an error, and q
 to quit the interface.
