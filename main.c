@@ -111,9 +111,13 @@ static void render(const int selected, const int width)
 		char buffer[width + 1];
 		#define ERROR (ERR_BUFF[i])
 
-		int off = snprintf(buffer, sizeof(buffer), " %s:%d:%d:%s",
-				   ERROR.file, ERROR.line, ERROR.col,
-				   ERROR.msg + ERROR.off);
+		int off = ERROR.col ? snprintf(buffer, sizeof(buffer), " %s:%d:%d:%s",
+				                       ERROR.file, ERROR.line, ERROR.col,
+				                       ERROR.msg + ERROR.off)
+
+                            : snprintf(buffer, sizeof(buffer), " %s:%d:%s",
+                                       ERROR.file, ERROR.line,
+                                       ERROR.msg + ERROR.off);
 
 		if (off > width)
 		{
