@@ -141,8 +141,13 @@ static void render(const int selected, const int width)
 			}
 		}
 
-                int attrib = 0;
-                if (selected == i) attrib = COLOR_PAIR(HIGHLIGHT);
+		int attrib = 0;
+
+		if (selected == i)
+		{
+			attrib |= COLOR_PAIR(HIGHLIGHT);
+			attrib |= HIGHLIGHT_ATTRIB;
+		}
 
 		attron(attrib);
 		printw("%.*s", width, display);
@@ -163,7 +168,7 @@ static int main_gui()
 	noecho();
 
 	init_pair(NORMAL, FOREGROUND_COLOR, BACKGROUND_COLOR);
-        init_pair(HIGHLIGHT, HIGHLIGHT_COLOR, BACKGROUND_COLOR);
+	init_pair(HIGHLIGHT, HIGHLIGHT_COLOR, BACKGROUND_COLOR);
 	init_pair(EXIT_MSG, EXIT_CODE_COLOR, BACKGROUND_COLOR);
 
 	wbkgd(win, COLOR_PAIR(NORMAL));
